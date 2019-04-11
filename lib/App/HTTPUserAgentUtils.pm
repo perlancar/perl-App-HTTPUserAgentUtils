@@ -291,8 +291,7 @@ $SPEC{http_ua_by_nickname} = {
     summary => 'Get HTTP User-Agent string by nickname',
     args => {
         nickname => {
-            schema => ['str*', in=>\@HTTP::UserAgentStr::Util::ByNickname::nicknames];
-            req => 1,
+            schema => ['str*', in=>\@HTTP::UserAgentStr::Util::ByNickname::nicknames],
             pos => 0,
         },
         action => {
@@ -317,7 +316,9 @@ sub http_ua_by_nickname {
         return [200, "OK", \@HTTP::UserAgentStr::Util::ByNickname::nicknames];
     } else {
         # get
-        [200, "OK", HTTP::UserAgentStr::Util::ByNickname::_get($args{nickname})];
+        my $nickname = $args{nickname}
+            or return [400, "Please specify nickname"];
+        [200, "OK", HTTP::UserAgentStr::Util::ByNickname::_get($nickname)];
     }
 }
 
