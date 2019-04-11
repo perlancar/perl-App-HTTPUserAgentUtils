@@ -7,6 +7,8 @@ use 5.010001;
 use strict;
 use warnings;
 
+use HTTP::UserAgentStr::Util::ByNickname;
+
 our %SPEC;
 
 # copy-pasted from WWW::UserAgent::Random doc
@@ -105,7 +107,7 @@ _
 sub parse_http_ua {
     my %args = @_;
 
-    my $ua = $args{ua};
+    chomp(my $ua = $args{ua});
     my $backend = $args{backend} // 'HTML::ParseBrowser';
 
     my $res;
@@ -282,6 +284,41 @@ sub parse_http_ua {
     }
 
     [200, "OK", $res];
+}
+
+$SPEC{http_ua_by_nickname} = {
+    v => 1.1,
+    summary => 'Get HTTP User-Agent string by nickname',
+    args => {
+        nickname => {
+            schema => ['str*', in=>\@HTTP::UserAgentStr::Util::ByNickname::nicknames];
+            req => 1,
+            pos => 0,
+        },
+        action => {
+            schema => ['str*', in=>['list', 'get']],
+            default => 'get',
+            cmdline_aliases => {
+                l => {
+                    summary => 'List available nicknames (shortcut for --action=list)',
+                    is_flag => 1,
+                    code => sub { $_[0]{action} = 'list' },
+                },
+            },
+        },
+    },
+};
+sub http_ua_by_nickname {
+    my %args = @_;
+
+    my $action = $args{action} // 'get';
+
+    if ($action eq 'list') {
+        return [200, "OK", \@HTTP::UserAgentStr::Util::ByNickname::nicknames];
+    } else {
+        # get
+        [200, "OK", HTTP::UserAgentStr::Util::ByNickname::_get($args{nickname})];
+    }
 }
 
 1;
