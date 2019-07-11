@@ -1,4 +1,4 @@
-0.002   2019-04-11 (PERLANCAR)
+0.002   2019-04-11  Released-By: PERLANCAR
 
 	- Add utility: http-ua-by-nickname.
 
@@ -7,6 +7,6 @@
 	- [ux] Don't need to make CLI's read env & config files, for simplicity.
 
 
-0.001   2019-04-02 (PERLANCAR)
+0.001   2019-04-02  Released-By: PERLANCAR
 
         - First release.
